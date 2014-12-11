@@ -7,6 +7,7 @@
 //
 
 #import "BLCComment.h"
+#import "BLCUser.h"
 
 @implementation BLCComment
 

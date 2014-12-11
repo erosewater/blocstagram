@@ -7,6 +7,7 @@
 //
 
 #import "BLCMedia.h"
+#import "BLCUser.h"
 
 @implementation BLCMedia
 
