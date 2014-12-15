@@ -14,9 +14,9 @@
 
 @interface BLCDataSource ()
 
-// Exercise says NSArray - needs to be NSMutableArray
 
-@property (nonatomic, strong) NSMutableArray *mediaItems;
+
+@property (nonatomic, strong) NSArray *mediaItems;
 
 @end
 
@@ -40,6 +40,14 @@
     
     return self;
 }
+
+- (void) removeMediaItemAtIndex:(NSUInteger)index
+{
+    NSMutableArray *randomMediaItems = [NSMutableArray arrayWithArray:self.mediaItems];
+    [randomMediaItems removeObjectAtIndex:index];
+    self.mediaItems = randomMediaItems;
+}
+
 
 - (void) addRandomData {
     NSMutableArray *randomMediaItems = [NSMutableArray array];

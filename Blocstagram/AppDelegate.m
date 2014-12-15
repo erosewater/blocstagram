@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "BLCImagesTableViewController.h"
-
 @interface AppDelegate ()
 
 @end

@@ -27,6 +27,7 @@
 		F9EF4D7C1A39060E00F9ADF7 /* BLCMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EF4D7B1A39060E00F9ADF7 /* BLCMedia.m */; };
 		F9EF4D7F1A39077100F9ADF7 /* BLCComment.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EF4D7E1A39077100F9ADF7 /* BLCComment.m */; };
 		F9EF4D821A39095C00F9ADF7 /* BLCDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EF4D811A39095C00F9ADF7 /* BLCDataSource.m */; };
+		F9EF4D851A39F76400F9ADF7 /* BLCMediaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EF4D841A39F76400F9ADF7 /* BLCMediaTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,8 @@
 		F9EF4D7E1A39077100F9ADF7 /* BLCComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCComment.m; sourceTree = "<group>"; };
 		F9EF4D801A39095C00F9ADF7 /* BLCDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCDataSource.h; sourceTree = "<group>"; };
 		F9EF4D811A39095C00F9ADF7 /* BLCDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCDataSource.m; sourceTree = "<group>"; };
+		F9EF4D831A39F76400F9ADF7 /* BLCMediaTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCMediaTableViewCell.h; sourceTree = "<group>"; };
+		F9EF4D841A39F76400F9ADF7 /* BLCMediaTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCMediaTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,15 +114,17 @@
 		F93010E21A37AD5B000C9CDE /* Blocstagram */ = {
 			isa = PBXGroup;
 			children = (
+				F93010E31A37AD5B000C9CDE /* Supporting Files */,
 				F93011031A37ADE6000C9CDE /* Images */,
 				F93010E71A37AD5B000C9CDE /* AppDelegate.h */,
 				F93010E81A37AD5B000C9CDE /* AppDelegate.m */,
 				F93010EA1A37AD5B000C9CDE /* Images.xcassets */,
 				F93010EC1A37AD5B000C9CDE /* LaunchScreen.xib */,
-				F93010E31A37AD5B000C9CDE /* Supporting Files */,
 				F93011181A37AE89000C9CDE /* BLCImagesTableViewController.h */,
 				F93011191A37AE89000C9CDE /* BLCImagesTableViewController.m */,
 				F9EF4D771A3904AA00F9ADF7 /* BLCUser.h */,
+				F9EF4D831A39F76400F9ADF7 /* BLCMediaTableViewCell.h */,
+				F9EF4D841A39F76400F9ADF7 /* BLCMediaTableViewCell.m */,
 				F9EF4D801A39095C00F9ADF7 /* BLCDataSource.h */,
 				F9EF4D811A39095C00F9ADF7 /* BLCDataSource.m */,
 				F9EF4D7A1A39060E00F9ADF7 /* BLCMedia.h */,
@@ -223,6 +228,7 @@
 				TargetAttributes = {
 					F93010DF1A37AD5B000C9CDE = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 2W4U5L3MCF;
 					};
 					F93010F21A37AD5B000C9CDE = {
 						CreatedOnToolsVersion = 6.1;
@@ -289,6 +295,7 @@
 				F930111A1A37AE89000C9CDE /* BLCImagesTableViewController.m in Sources */,
 				F9EF4D7C1A39060E00F9ADF7 /* BLCMedia.m in Sources */,
 				F9EF4D7F1A39077100F9ADF7 /* BLCComment.m in Sources */,
+				F9EF4D851A39F76400F9ADF7 /* BLCMediaTableViewCell.m in Sources */,
 				F9EF4D821A39095C00F9ADF7 /* BLCDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,9 +412,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Blocstagram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -415,9 +426,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Blocstagram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

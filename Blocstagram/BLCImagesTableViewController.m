@@ -11,17 +11,16 @@
 #import "BLCMedia.h"
 #import "BLCUser.h"
 #import "BLCComment.h"
+#import "BLCMediaTableViewCell.h"
 
 
 @interface BLCImagesTableViewController ()
-
-
+@property (nonatomic, strong) NSMutableArray *images;
 @end
 
 @implementation BLCImagesTableViewController
 
 
-// Added this - verify with Steve when this is being called
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -38,26 +37,18 @@
     
     
     
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"imageCell"];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
+    [self.tableView registerClass:[BLCMediaTableViewCell class] forCellReuseIdentifier:@"mediaCell"];
+   }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
-
--(NSMutableArray *)items {
+-(NSArray *)items {
     
     // DBK - Added to complete exercise - returns mediaItems array from DataSource
-   return [BLCDataSource sharedInstance].mediaItems;
+   return [[BLCDataSource sharedInstance] mediaItems];
 }
 
 
@@ -75,38 +66,18 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"imageCell" forIndexPath:indexPath];
-    
-   
+   // UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"mediaCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    static NSInteger imageViewTag = 1234;
-    UIImageView *imageView = (UIImageView*)[cell.contentView viewWithTag:imageViewTag];
-    
-    if (!imageView) {
-        // This is a new cell, it doesn't have an image view yet
-        imageView = [[UIImageView alloc] init];
-        imageView.contentMode = UIViewContentModeScaleToFill;
-        
-        imageView.frame = cell.contentView.bounds;
-        imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        
-        imageView.tag = imageViewTag;
-        [cell.contentView addSubview:imageView];
-    }
-    
-    BLCMedia *item = self.items[indexPath.row];
-    imageView.image = item.image;
-    
-
-    
+    BLCMediaTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"mediaCell" forIndexPath:indexPath];
+    cell.mediaItem = self.items[indexPath.row];
     return cell;
+    
 }
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
  // DBK Modified for exercise
     BLCMedia *item = self.items[indexPath.row];
-    UIImage *image = item.image;
-    return (CGRectGetWidth(self.view.frame) / image.size.width) * image.size.height;
+    return [BLCMediaTableViewCell heightForMediaItem:item width:CGRectGetWidth(self.view.frame)];
 }
 
 // Override to support conditional editing of the table view.
@@ -124,7 +95,16 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
        // [[BLCDataSource sharedInstance].mediaItems removeObjectAtIndex:indexPath.row];
-        [self.items removeObjectAtIndex:indexPath.row];
+        
+        //self.items
+        
+   
+        
+ //   [[BLCDataSource sharedInstance] removeMediaItemAtIndex:(NSUInteger)indexPath.row];
+      
+    [[BLCDataSource sharedInstance] removeMediaItemAtIndex:(NSUInteger)indexPath.row];
+        
+   //    [self.items removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
    
