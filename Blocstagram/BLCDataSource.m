@@ -19,6 +19,8 @@
 
 
 @property (nonatomic, strong) NSArray *mediaItems;
+@property (nonatomic, assign) BOOL isRefreshing;
+@property (nonatomic, assign) BOOL isLoadingOlderItems;
 
 @end
 
@@ -92,6 +94,17 @@
     return user;
 }
 
+- (NSString *)randomSentenceWithMaximumNumberOfWords:(NSInteger) words { NSMutableString *sentence = [[NSMutableString alloc] init];
+    
+    for (int i = 0; i < words; i++) {
+        NSString *word = [self randomStringOfLength:arc4random_uniform(7)];
+        [sentence appendString:word];
+        if (i < words-1)
+            [sentence appendString:@" "];
+    }
+    return sentence;
+}
+
 - (BLCComment *) randomComment {
     BLCComment *comment = [[BLCComment alloc] init];
     
@@ -121,6 +134,50 @@
         [s appendFormat:@"%C", c];
     }
     return [NSString stringWithString:s];
+}
+
+
+
+- (void) requestNewItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler {
+    if (self.isRefreshing == NO) {
+        self.isRefreshing = YES;
+        BLCMedia *media = [[BLCMedia alloc] init];
+        media.user = [self randomUser];
+        media.image = [UIImage imageNamed:@"10.jpg"];
+        media.caption = [self randomSentenceWithMaximumNumberOfWords:7];
+      
+    
+    
+        
+        NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+        [mutableArrayWithKVO insertObject:media atIndex:0];
+        
+        self.isRefreshing = NO;
+        
+        if (completionHandler) {
+            completionHandler(nil);
+        }
+    }
+}
+
+- (void) requestOldItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler {
+    if (self.isLoadingOlderItems == NO) {
+        self.isLoadingOlderItems = YES;
+        BLCMedia *media = [[BLCMedia alloc] init];
+        media.user = [self randomUser];
+        media.image = [UIImage imageNamed:@"1.jpg"];
+        media.caption = [self randomSentenceWithMaximumNumberOfWords:7];
+      
+        
+        NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+        [mutableArrayWithKVO addObject:media];
+        
+        self.isLoadingOlderItems = NO;
+        
+        if (completionHandler) {
+            completionHandler(nil);
+        }
+    }
 }
 
 #pragma mark - Key/Value Observing

@@ -11,13 +11,17 @@
 
 // dbk ask Steve what the difference between @class and import is
 @class BLCMedia;
+
+typedef void (^BLCNewItemCompletionBlock)(NSError *error);
+
 @interface BLCDataSource : NSObject
 
 +(instancetype) sharedInstance;
 @property (nonatomic, strong, readonly) NSArray *mediaItems;
 
-// Do we still need the first one
-- (void) removeMediaItemAtIndex:(NSUInteger)index;
+
 - (void) deleteMediaItem:(BLCMedia *)item;
+- (void) requestNewItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler;
+- (void) requestOldItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler;
 
 @end
