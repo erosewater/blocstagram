@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 
+
+
+
 // dbk ask Steve what the difference between @class and import is
 @class BLCMedia;
 
@@ -18,10 +21,14 @@ typedef void (^BLCNewItemCompletionBlock)(NSError *error);
 
 +(instancetype) sharedInstance;
 @property (nonatomic, strong, readonly) NSArray *mediaItems;
+@property (nonatomic, strong, readonly) NSString *accessToken;
 
 
 - (void) deleteMediaItem:(BLCMedia *)item;
 - (void) requestNewItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler;
 - (void) requestOldItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler;
+
+
++ (NSString *) instagramClientID;
 
 @end
