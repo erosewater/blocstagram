@@ -22,4 +22,7 @@
 @property (nonatomic, strong) NSString *caption;
 @property (nonatomic, strong) NSArray *comments;
 
+
+- (instancetype) initWithDictionary:(NSDictionary *)mediaDictionary;
+
 @end

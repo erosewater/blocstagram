@@ -99,7 +99,22 @@
     cell.mediaItem = self.items[indexPath.row];
     return cell;
     
+    
+
 }
+
+
+- (CGFloat) tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    BLCMedia *item = [BLCDataSource sharedInstance].mediaItems[indexPath.row];
+    if (item.image) {
+        return 350;
+    } else {
+        return 150;
+    }
+}
+
+
+
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
  // DBK Modified for exercise
     BLCMedia *item = self.items[indexPath.row];
