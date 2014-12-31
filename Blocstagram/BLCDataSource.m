@@ -140,12 +140,14 @@
     NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
     
     
-    
+    // Get objects
     if (parameters[@"min_id"]) {
         // This was a pull-to-refresh request
         
         NSRange rangeOfIndexes = NSMakeRange(0, tmpMediaItems.count);
         NSIndexSet *indexSetOfNewObjects = [NSIndexSet indexSetWithIndexesInRange:rangeOfIndexes];
+        
+        
         
         [mutableArrayWithKVO insertObjects:tmpMediaItems atIndexes:indexSetOfNewObjects];
         
@@ -173,8 +175,10 @@
     if (self.isRefreshing == NO) {
         self.isRefreshing = YES;
        
-        // Need to add images here
-        
+        // Need to add images here - Issue, all media objects are removed, so we can't add any objects here, need to check first to see if there are any objects first
+        // This next line doesn't work since there is no id
+    
+       if (self.mediaItems.count > 0) {
         NSString *minID = [[self.mediaItems firstObject] idNumber];
         NSDictionary *parameters = @{@"min_id": minID};
         
@@ -183,9 +187,15 @@
             
             if (completionHandler) {
                 completionHandler(error);
+           
             }
         }];
     }
+    } else  if (self.mediaItems.count == 0){
+        [self populateDataWithParameters:nil completionHandler:nil];
+            self.isRefreshing = NO;
+                   }
+
 }
 
 - (void) requestOldItemsWithCompletionHandler:(BLCNewItemCompletionBlock)completionHandler {
