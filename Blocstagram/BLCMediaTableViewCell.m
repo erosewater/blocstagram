@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *commentLabelHeightConstraint;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *twoFingerTap;
 
 @end
 
@@ -67,7 +68,13 @@ static NSParagraphStyle *paragraphStyle;
         
         self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
         self.longPressGestureRecognizer.delegate = self;
+        
+        self.twoFingerTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(twoFingerTapFired:)];
+        self.twoFingerTap.numberOfTouchesRequired = 2;
+        self.twoFingerTap.delegate = self;
+        
         [self.mediaImageView addGestureRecognizer:self.longPressGestureRecognizer];
+        [self.usernameAndCaptionLabel addGestureRecognizer:self.twoFingerTap];
         
         
         self.usernameAndCaptionLabel = [[UILabel alloc] init];
@@ -75,6 +82,7 @@ static NSParagraphStyle *paragraphStyle;
         self.commentLabel.numberOfLines = 0;
         
         for (UIView *view in @[self.mediaImageView, self.usernameAndCaptionLabel, self.commentLabel]) {
+            view.multipleTouchEnabled = YES;
             [self.contentView addSubview:view];
             
             view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -229,11 +237,18 @@ static NSParagraphStyle *paragraphStyle;
     
 }
 
+- (void) twoFingerTapFired:(UITapGestureRecognizer *)sender {
+    [self.delegate cell:self didTwoFingerTapUser:self.usernameAndCaptionLabel];
+    
+}
+
 - (void) longPressFired:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         [self.delegate cell:self didLongPressImageView:self.mediaImageView];
     }
 }
+
+
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {

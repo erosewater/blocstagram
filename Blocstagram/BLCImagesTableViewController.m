@@ -22,6 +22,7 @@
 @interface BLCImagesTableViewController () <BLCMediaTableViewCellDelegate, UIViewControllerTransitioningDelegate, BLCMediaFullScreenDelegate>
 
 @property (nonatomic, weak) UIImageView *lastTappedImageView;
+@property (nonatomic, weak) UILabel *lastTappedUser;
 @property (nonatomic, strong) NSMutableArray *images;
 
 
@@ -211,9 +212,22 @@
    
 }
 
+- (void) cell:(BLCMediaTableViewCell *)cell didTwoFingerTapUser:(UILabel *)userNameAndCaption {
+    self.lastTappedUser = userNameAndCaption;
+    
+    
+    if (!cell.mediaItem.image) {
+        
+        [[BLCDataSource sharedInstance] downloadImageForMediaItem:cell.mediaItem];
+       
+              
+    }
+    
+    
     
 
 
+}
 
 - (void) cell:(BLCMediaTableViewCell *)cell didLongPressImageView:(UIImageView *)imageView {
     NSMutableArray *itemsToShare = [NSMutableArray array];
@@ -252,6 +266,7 @@
     
     if (itemsToShare.count > 0) {
         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
+        [self dismissViewControllerAnimated:self completion: nil];
         [self presentViewController:activityVC animated:YES completion:nil];
     }
 }
