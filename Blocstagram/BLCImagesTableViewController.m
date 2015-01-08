@@ -24,6 +24,7 @@
 @property (nonatomic, weak) UIImageView *lastTappedImageView;
 @property (nonatomic, weak) UILabel *lastTappedUser;
 @property (nonatomic, strong) NSMutableArray *images;
+@property(nonatomic, readonly, getter=isDragging) BOOL dragging;
 
 
 @end
@@ -83,12 +84,22 @@
 
 #pragma mark - UIScrollViewDelegate
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-// Modified this for exercise.  Infinite scroll will only be called again when scrolling stops and the user wants to move the screen again
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView forMediaItem: (BLCMedia *)mediaItem{
+// Did not work reliably
+//    if (!scrollView.isDragging) {
+//        [self scrollViewDidEndDragging:scrollView willDecelerate:YES forMediaItem:mediaItem];
+    
+  
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-[self infiniteScrollIfNecessary];
 }
+// Implementing this method reliably downloaded images as i was scrolling
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate forMediaItem:(BLCMedia *)mediaItem {
+    
+    [[BLCDataSource sharedInstance] downloadImageForMediaItem:mediaItem];
+    [self infiniteScrollIfNecessary];
+   
+}
+
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -97,6 +108,17 @@
   
     return self.items.count;
 }
+
+- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    BLCMedia *mediaItem = [BLCDataSource sharedInstance].mediaItems[indexPath.row];
+    if (mediaItem.downloadState == BLCMediaDownloadStateNeedsImage) {
+        
+    [self scrollViewDidEndDragging:tableView willDecelerate:YES forMediaItem:mediaItem];
+    
+    }
+}
+
+
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
