@@ -53,6 +53,8 @@
 
     
     [self.tableView registerClass:[BLCMediaTableViewCell class] forCellReuseIdentifier:@"mediaCell"];
+ 
+    
    }
 
 - (void)didReceiveMemoryWarning {
@@ -82,14 +84,17 @@
     }
 }
 
+- (void) cellDidPressLikeButton:(BLCMediaTableViewCell *)cell {
+    [[BLCDataSource sharedInstance] toggleLikeOnMediaItem:cell.mediaItem];
+}
+
+- (void) getListOfLikes:(BLCMediaTableViewCell *)cell {
+    [[BLCDataSource sharedInstance] getListOfLikes:cell.mediaItem];
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView forMediaItem: (BLCMedia *)mediaItem{
-// Did not work reliably
-//    if (!scrollView.isDragging) {
-//        [self scrollViewDidEndDragging:scrollView willDecelerate:YES forMediaItem:mediaItem];
-    
-  
 
 }
 // Implementing this method reliably downloaded images as i was scrolling

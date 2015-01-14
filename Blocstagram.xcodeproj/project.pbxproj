@@ -26,6 +26,15 @@
 		F93011161A37AE36000C9CDE /* 9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F930110C1A37AE36000C9CDE /* 9.jpg */; };
 		F93011171A37AE36000C9CDE /* 10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F930110D1A37AE36000C9CDE /* 10.jpg */; };
 		F930111A1A37AE89000C9CDE /* BLCImagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F93011191A37AE89000C9CDE /* BLCImagesTableViewController.m */; };
+		F9A600241A60309D00928597 /* angle-mask.png in Resources */ = {isa = PBXBuildFile; fileRef = F9A6001E1A60309D00928597 /* angle-mask.png */; };
+		F9A600251A60309D00928597 /* angle-mask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9A6001F1A60309D00928597 /* angle-mask@2x.png */; };
+		F9A600261A60309D00928597 /* heart-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = F9A600201A60309D00928597 /* heart-empty.png */; };
+		F9A600271A60309D00928597 /* heart-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9A600211A60309D00928597 /* heart-empty@2x.png */; };
+		F9A600281A60309D00928597 /* heart-full.png in Resources */ = {isa = PBXBuildFile; fileRef = F9A600221A60309D00928597 /* heart-full.png */; };
+		F9A600291A60309D00928597 /* heart-full@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9A600231A60309D00928597 /* heart-full@2x.png */; };
+		F9A6002C1A60328C00928597 /* BLCCircleSpinnerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A6002B1A60328C00928597 /* BLCCircleSpinnerView.m */; };
+		F9A6002F1A64880800928597 /* BLCLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A6002E1A64880800928597 /* BLCLikeButton.m */; };
+		F9A600321A649BDF00928597 /* BLCLikedUsers.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A600311A649BDF00928597 /* BLCLikedUsers.m */; };
 		F9CFBA9B1A487DE800089439 /* BLCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CFBA9A1A487DE800089439 /* BLCLoginViewController.m */; };
 		F9EF4D791A3904AA00F9ADF7 /* BLCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EF4D781A3904AA00F9ADF7 /* BLCUser.m */; };
 		F9EF4D7C1A39060E00F9ADF7 /* BLCMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EF4D7B1A39060E00F9ADF7 /* BLCMedia.m */; };
@@ -74,6 +83,18 @@
 		F930110D1A37AE36000C9CDE /* 10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10.jpg; sourceTree = "<group>"; };
 		F93011181A37AE89000C9CDE /* BLCImagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCImagesTableViewController.h; sourceTree = "<group>"; };
 		F93011191A37AE89000C9CDE /* BLCImagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCImagesTableViewController.m; sourceTree = "<group>"; };
+		F9A6001E1A60309D00928597 /* angle-mask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "angle-mask.png"; sourceTree = "<group>"; };
+		F9A6001F1A60309D00928597 /* angle-mask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "angle-mask@2x.png"; sourceTree = "<group>"; };
+		F9A600201A60309D00928597 /* heart-empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-empty.png"; sourceTree = "<group>"; };
+		F9A600211A60309D00928597 /* heart-empty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-empty@2x.png"; sourceTree = "<group>"; };
+		F9A600221A60309D00928597 /* heart-full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-full.png"; sourceTree = "<group>"; };
+		F9A600231A60309D00928597 /* heart-full@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-full@2x.png"; sourceTree = "<group>"; };
+		F9A6002A1A60328C00928597 /* BLCCircleSpinnerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCCircleSpinnerView.h; sourceTree = "<group>"; };
+		F9A6002B1A60328C00928597 /* BLCCircleSpinnerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCCircleSpinnerView.m; sourceTree = "<group>"; };
+		F9A6002D1A64880800928597 /* BLCLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCLikeButton.h; sourceTree = "<group>"; };
+		F9A6002E1A64880800928597 /* BLCLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCLikeButton.m; sourceTree = "<group>"; };
+		F9A600301A649BDF00928597 /* BLCLikedUsers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCLikedUsers.h; sourceTree = "<group>"; };
+		F9A600311A649BDF00928597 /* BLCLikedUsers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCLikedUsers.m; sourceTree = "<group>"; };
 		F9CFBA991A487DE800089439 /* BLCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCLoginViewController.h; sourceTree = "<group>"; };
 		F9CFBA9A1A487DE800089439 /* BLCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCLoginViewController.m; sourceTree = "<group>"; };
 		F9EF4D771A3904AA00F9ADF7 /* BLCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCUser.h; sourceTree = "<group>"; };
@@ -147,6 +168,10 @@
 		F93010E21A37AD5B000C9CDE /* Blocstagram */ = {
 			isa = PBXGroup;
 			children = (
+				F9A6002D1A64880800928597 /* BLCLikeButton.h */,
+				F9A6002E1A64880800928597 /* BLCLikeButton.m */,
+				F9A6002A1A60328C00928597 /* BLCCircleSpinnerView.h */,
+				F9A6002B1A60328C00928597 /* BLCCircleSpinnerView.m */,
 				F93010E31A37AD5B000C9CDE /* Supporting Files */,
 				F93011031A37ADE6000C9CDE /* Images */,
 				F93010E71A37AD5B000C9CDE /* AppDelegate.h */,
@@ -169,6 +194,8 @@
 				F9EF4D7A1A39060E00F9ADF7 /* BLCMedia.h */,
 				F9EF4D7D1A39077100F9ADF7 /* BLCComment.h */,
 				F9EF4D7E1A39077100F9ADF7 /* BLCComment.m */,
+				F9A600301A649BDF00928597 /* BLCLikedUsers.h */,
+				F9A600311A649BDF00928597 /* BLCLikedUsers.m */,
 				F9EF4D7B1A39060E00F9ADF7 /* BLCMedia.m */,
 				F9EF4D781A3904AA00F9ADF7 /* BLCUser.m */,
 			);
@@ -204,6 +231,12 @@
 		F93011031A37ADE6000C9CDE /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				F9A6001E1A60309D00928597 /* angle-mask.png */,
+				F9A6001F1A60309D00928597 /* angle-mask@2x.png */,
+				F9A600201A60309D00928597 /* heart-empty.png */,
+				F9A600211A60309D00928597 /* heart-empty@2x.png */,
+				F9A600221A60309D00928597 /* heart-full.png */,
+				F9A600231A60309D00928597 /* heart-full@2x.png */,
 				F93011041A37AE36000C9CDE /* 1.jpg */,
 				F93011051A37AE36000C9CDE /* 2.jpg */,
 				F93011061A37AE36000C9CDE /* 3.jpg */,
@@ -305,14 +338,20 @@
 				F93011151A37AE36000C9CDE /* 8.jpg in Resources */,
 				F93011111A37AE36000C9CDE /* 4.jpg in Resources */,
 				F93011101A37AE36000C9CDE /* 3.jpg in Resources */,
+				F9A600291A60309D00928597 /* heart-full@2x.png in Resources */,
 				F93011131A37AE36000C9CDE /* 6.jpg in Resources */,
 				F930110E1A37AE36000C9CDE /* 1.jpg in Resources */,
+				F9A600251A60309D00928597 /* angle-mask@2x.png in Resources */,
+				F9A600241A60309D00928597 /* angle-mask.png in Resources */,
 				F93010EE1A37AD5B000C9CDE /* LaunchScreen.xib in Resources */,
 				F93011121A37AE36000C9CDE /* 5.jpg in Resources */,
 				F93011141A37AE36000C9CDE /* 7.jpg in Resources */,
+				F9A600261A60309D00928597 /* heart-empty.png in Resources */,
 				F930110F1A37AE36000C9CDE /* 2.jpg in Resources */,
 				F93011171A37AE36000C9CDE /* 10.jpg in Resources */,
 				F93010EB1A37AD5B000C9CDE /* Images.xcassets in Resources */,
+				F9A600271A60309D00928597 /* heart-empty@2x.png in Resources */,
+				F9A600281A60309D00928597 /* heart-full.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,10 +404,13 @@
 			files = (
 				F9EF4D791A3904AA00F9ADF7 /* BLCUser.m in Sources */,
 				F90519761A573AC7003736BE /* BLCMediaFullScreenAnimator.m in Sources */,
+				F9A6002F1A64880800928597 /* BLCLikeButton.m in Sources */,
 				F93010E91A37AD5B000C9CDE /* AppDelegate.m in Sources */,
+				F9A600321A649BDF00928597 /* BLCLikedUsers.m in Sources */,
 				F93010E61A37AD5B000C9CDE /* main.m in Sources */,
 				F930111A1A37AE89000C9CDE /* BLCImagesTableViewController.m in Sources */,
 				F9EF4D7C1A39060E00F9ADF7 /* BLCMedia.m in Sources */,
+				F9A6002C1A60328C00928597 /* BLCCircleSpinnerView.m in Sources */,
 				F9EF4D7F1A39077100F9ADF7 /* BLCComment.m in Sources */,
 				F9EF4D851A39F76400F9ADF7 /* BLCMediaTableViewCell.m in Sources */,
 				F90519791A573BCC003736BE /* BLCMediaFullScreenViewController.m in Sources */,

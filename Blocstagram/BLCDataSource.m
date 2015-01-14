@@ -13,6 +13,7 @@
 #import "BLCLoginViewController.h"
 #import <UICKeyChainStore.h>
 #import <AFNetworking/AFNetworking.h>
+//#import "BLCLikedUsers.h"
 
 
 @interface BLCDataSource () {
@@ -26,6 +27,7 @@
 @property (nonatomic, assign) BOOL isLoadingOlderItems;
 @property (nonatomic, strong) NSString *accessToken;
 @property (nonatomic, assign) BOOL thereAreNoMoreOlderMessages;
+@property (readonly) long likeValue;
 
 @property (nonatomic, strong) AFHTTPRequestOperationManager *instagramOperationManager;
 @end
@@ -128,6 +130,7 @@
                                  parameters:mutableParameters
                                     success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                         if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                                            
                                             [self parseDataFromFeedDictionary:responseObject fromRequestWithParameters:parameters];
                                             
                                             if (completionHandler) {
@@ -145,7 +148,7 @@
 }
 
 
-
+// DBK - Here's where we need to make sure the liked users is added to the media items
 - (void) parseDataFromFeedDictionary:(NSDictionary *) feedDictionary fromRequestWithParameters:(NSDictionary *)parameters {
     NSArray *mediaArray = feedDictionary[@"data"];
     
@@ -156,7 +159,7 @@
         
         if (mediaItem) {
             [tmpMediaItems addObject:mediaItem];
-//            [self downloadImageForMediaItem:mediaItem];
+            [self downloadImageForMediaItem:mediaItem];
         }
     }
     
@@ -300,6 +303,55 @@
     }
 }
 
+#pragma mark - Liking Media Items
+// left off here
+// we want to store the liked users in the mediaItem object
+
+
+
+- (void) toggleLikeOnMediaItem:(BLCMedia *)mediaItem {
+    NSString *urlString = [NSString stringWithFormat:@"media/%@/likes", mediaItem.idNumber];
+    NSDictionary *parameters = @{@"access_token": self.accessToken};
+    
+    if (mediaItem.likeState == BLCLikeStateNotLiked) {
+        
+        mediaItem.likeState = BLCLikeStateLiking;
+        
+        [self.instagramOperationManager POST:urlString parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            mediaItem.likeState = BLCLikeStateLiked;
+            NSNumber *likeValue = @([mediaItem.likes longValue] + 1);
+            mediaItem.likes = likeValue;
+            
+            [self reloadMediaItem:mediaItem];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            mediaItem.likeState = BLCLikeStateNotLiked;
+            [self reloadMediaItem:mediaItem];
+        }];
+        
+    } else if (mediaItem.likeState == BLCLikeStateLiked) {
+        
+        mediaItem.likeState = BLCLikeStateUnliking;
+        
+        [self.instagramOperationManager DELETE:urlString parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            mediaItem.likeState = BLCLikeStateNotLiked;
+            NSNumber *likeValue = @([mediaItem.likes longValue] - 1);
+            mediaItem.likes = likeValue;
+            [self reloadMediaItem:mediaItem];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            mediaItem.likeState = BLCLikeStateLiked;
+            [self reloadMediaItem:mediaItem];
+        }];
+        
+    }
+    
+    [self reloadMediaItem:mediaItem];
+}
+
+- (void) reloadMediaItem:(BLCMedia *)mediaItem {
+    NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+    NSUInteger index = [mutableArrayWithKVO indexOfObject:mediaItem];
+    [mutableArrayWithKVO replaceObjectAtIndex:index withObject:mediaItem];
+}
 
 #pragma mark - Key/Value Observing
 

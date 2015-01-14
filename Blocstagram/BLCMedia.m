@@ -10,6 +10,7 @@
 #import "BLCUser.h"
 // Added line below for exercise
 #import "BLCComment.h"
+//#import "BLCLikedUsers.h"
 
 @implementation BLCMedia
 
@@ -41,14 +42,40 @@
         
         NSMutableArray *commentsArray = [NSMutableArray array];
         
+        
+        
         for (NSDictionary *commentDictionary in mediaDictionary[@"comments"][@"data"]) {
             BLCComment *comment = [[BLCComment alloc] initWithDictionary:commentDictionary];
             [commentsArray addObject:comment];
         }
         
         self.comments = commentsArray;
+        
+        BOOL userHasLiked = [mediaDictionary[@"user_has_liked"] boolValue];
+        
+        self.likeState = userHasLiked ? BLCLikeStateLiked : BLCLikeStateNotLiked;
+        
+        NSDictionary *likedUserDictionary = mediaDictionary[@"likes"];
+        
+        // Caption might be null (if there's no caption)
+        if ([likedUserDictionary isKindOfClass:[NSDictionary class]]) {
+            self.likes = likedUserDictionary[@"count"];
+        } else {
+            self.likes = nil;
+        }
+
+        
+//      NSMutableArray *likedUsersArray = [NSMutableArray array];
+////       // Add the liked users into the array
+//       for (NSDictionary *likedUsersDictionary in mediaDictionary[@"likes"][@"count"]) {
+//            BLCLikedUsers *likedUsers = [[BLCLikedUsers alloc]initWithDictionary:likedUsersDictionary];
+//            [likedUsersArray addObject:likedUsers];
+//           
+//            self.likes = likedUsersArray;
+//      }
+//    }
     }
-    
+
     return self;
 }
 
@@ -62,6 +89,7 @@
         self.user = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(user))];
         self.mediaURL = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(mediaURL))];
         self.image = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(image))];
+        self.likes = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(likes))];
         
         if (self.image) {
             self.downloadState = BLCMediaDownloadStateHasImage;
@@ -74,10 +102,14 @@
         
         self.caption = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(caption))];
         self.comments = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(comments))];
+        self.likeState = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(likeState))];
+        
     }
     
     return self;
 }
+
+// My assumption here is that I am saving the "likeState" to the disk with this section
 
 - (void) encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.idNumber forKey:NSStringFromSelector(@selector(idNumber))];
@@ -86,6 +118,8 @@
     [aCoder encodeObject:self.image forKey:NSStringFromSelector(@selector(image))];
     [aCoder encodeObject:self.caption forKey:NSStringFromSelector(@selector(caption))];
     [aCoder encodeObject:self.comments forKey:NSStringFromSelector(@selector(comments))];
+    [aCoder encodeInteger:self.likeState forKey:NSStringFromSelector(@selector(likeState))];
+    [aCoder encodeObject:self.likes forKey:NSStringFromSelector(@selector(likes))];
 }
 
 

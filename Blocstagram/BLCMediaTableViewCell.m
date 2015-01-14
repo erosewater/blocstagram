@@ -10,6 +10,8 @@
 #import "BLCMedia.h"
 #import "BLCComment.h"
 #import "BLCUser.h"
+#import "BLCLikeButton.h"
+//#import "BLCLikedUsers.h"
 
 @interface BLCMediaTableViewCell () <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UIImageView *mediaImageView;
@@ -21,6 +23,9 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *twoFingerTap;
+@property (nonatomic, strong) BLCLikeButton *likeButton;
+@property (nonatomic, strong) UILabel *likeCounter;
+
 
 @end
 
@@ -44,8 +49,10 @@ static NSParagraphStyle *paragraphStyle;
     NSMutableParagraphStyle *mutableParagraphStyle = [[NSMutableParagraphStyle alloc] init];
     mutableParagraphStyle.headIndent = 20.0;
     mutableParagraphStyle.firstLineHeadIndent = 20.0;
-    mutableParagraphStyle.tailIndent = -20.0;
+    mutableParagraphStyle.tailIndent = -20.1;
     mutableParagraphStyle.paragraphSpacingBefore = 5;
+  // Added to fix line issue
+    mutableParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
     paragraphStyle = mutableParagraphStyle;
 
@@ -74,24 +81,41 @@ static NSParagraphStyle *paragraphStyle;
         self.twoFingerTap.delegate = self;
         
         [self.mediaImageView addGestureRecognizer:self.longPressGestureRecognizer];
-        [self.usernameAndCaptionLabel addGestureRecognizer:self.twoFingerTap];
+        
+        // Removing this - no longer necessary
+        //   [self.usernameAndCaptionLabel addGestureRecognizer:self.twoFingerTap];
         
         
         self.usernameAndCaptionLabel = [[UILabel alloc] init];
+       
+        // Not in exercise - fixes line wrap issue
+        self.usernameAndCaptionLabel.numberOfLines = 0;
+        self.usernameAndCaptionLabel.backgroundColor = usernameLabelGray;
         self.commentLabel = [[UILabel alloc] init];
         self.commentLabel.numberOfLines = 0;
+        //Not in exercise
+        self.commentLabel.backgroundColor = commentLabelGray;
+        self.likeButton = [[BLCLikeButton alloc] init];
+        [self.likeButton addTarget:self action:@selector(likePressed:) forControlEvents:UIControlEventTouchUpInside];
+        self.likeButton.backgroundColor = usernameLabelGray;
+        self.likeCounter = [[UILabel alloc] init];
+        self.likeCounter.backgroundColor = usernameLabelGray;
         
-        for (UIView *view in @[self.mediaImageView, self.usernameAndCaptionLabel, self.commentLabel]) {
+        
+        for (UIView *view in @[self.mediaImageView, self.usernameAndCaptionLabel, self.commentLabel, self.likeButton, self.likeCounter]) {
+        
+       
             view.multipleTouchEnabled = YES;
             [self.contentView addSubview:view];
             
             view.translatesAutoresizingMaskIntoConstraints = NO;
         }
         
-        NSDictionary *viewDictionary = NSDictionaryOfVariableBindings(_mediaImageView, _usernameAndCaptionLabel, _commentLabel);
+        NSDictionary *viewDictionary = NSDictionaryOfVariableBindings(_mediaImageView, _usernameAndCaptionLabel, _commentLabel, _likeButton, _likeCounter);
         
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_mediaImageView]|" options:kNilOptions metrics:nil views:viewDictionary]];
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_usernameAndCaptionLabel]|" options:kNilOptions metrics:nil views:viewDictionary]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_usernameAndCaptionLabel][_likeCounter(==38)][_likeButton(==38)]|" options:NSLayoutFormatAlignAllTop | NSLayoutFormatAlignAllBottom metrics:nil views:viewDictionary]];
+
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_commentLabel]|" options:kNilOptions metrics:nil views:viewDictionary]];
         
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_mediaImageView][_usernameAndCaptionLabel][_commentLabel]"
@@ -128,6 +152,16 @@ static NSParagraphStyle *paragraphStyle;
 
     }
     return self;
+}
+
+-(NSAttributedString *) likeCounterString {
+    CGFloat usernameFontSize = 15;
+    
+    NSString *likeString = [NSString stringWithFormat:@"%@", self.mediaItem.likes];
+    
+    NSMutableAttributedString *mutableLikeString = [[NSMutableAttributedString alloc] initWithString:likeString attributes:@{NSFontAttributeName : [lightFont fontWithSize:usernameFontSize], NSParagraphStyleAttributeName : paragraphStyle}];
+    
+    return mutableLikeString;
 }
 
 - (NSAttributedString *) usernameAndCaptionString {
@@ -179,8 +213,12 @@ static NSParagraphStyle *paragraphStyle;
     CGSize usernameLabelSize = [self.usernameAndCaptionLabel sizeThatFits:maxSize];
     CGSize commentLabelSize = [self.commentLabel sizeThatFits:maxSize];
     
+    
     self.usernameAndCaptionLabelHeightConstraint.constant = usernameLabelSize.height + 20;
     self.commentLabelHeightConstraint.constant = commentLabelSize.height + 20;
+   // [self.likeCounter sizeToFit];
+    
+    // work here
     
     if (_mediaItem.image) {
         self.imageHeightConstraint.constant = self.mediaItem.image.size.height / self.mediaItem.image.size.width * CGRectGetWidth(self.contentView.bounds);
@@ -216,6 +254,8 @@ static NSParagraphStyle *paragraphStyle;
     self.mediaImageView.image = _mediaItem.image;
     self.usernameAndCaptionLabel.attributedText = [self usernameAndCaptionString];
     self.commentLabel.attributedText = [self commentString];
+    self.likeButton.likeButtonState = mediaItem.likeState;
+    self.likeCounter.attributedText = [self likeCounterString];
     
     }
 
@@ -230,6 +270,14 @@ static NSParagraphStyle *paragraphStyle;
    // [super setSelected:selected animated:animated];
     
 }
+
+
+#pragma mark - Liking
+
+- (void) likePressed:(UIButton *)sender {
+    [self.delegate cellDidPressLikeButton:self];
+}
+
 #pragma mark - Image View
 
 - (void) tapFired:(UITapGestureRecognizer *)sender {

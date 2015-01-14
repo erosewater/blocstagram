@@ -15,6 +15,8 @@
 - (void) cell:(BLCMediaTableViewCell *)cell didTapImageView:(UIImageView *)imageView;
 - (void) cell:(BLCMediaTableViewCell *)cell didLongPressImageView:(UIImageView *)imageView;
 - (void) cell:(BLCMediaTableViewCell *)cell didTwoFingerTapUser:(UILabel *)userNameAndCaption;
+- (void) cellDidPressLikeButton:(BLCMediaTableViewCell *)cell;
+- (void) getListOfLikes:(BLCMediaTableViewCell *)cell;
 
 @end
 
