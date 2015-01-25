@@ -11,9 +11,9 @@
 #import "BLCComment.h"
 #import "BLCUser.h"
 #import "BLCLikeButton.h"
-//#import "BLCLikedUsers.h"
+#import "BLCComposeCommentView.h"
 
-@interface BLCMediaTableViewCell () <UIGestureRecognizerDelegate>
+@interface BLCMediaTableViewCell () <UIGestureRecognizerDelegate, BLCComposeCommentViewDelegate>
 @property (nonatomic, strong) UIImageView *mediaImageView;
 @property (nonatomic, strong) UILabel *usernameAndCaptionLabel;
 @property (nonatomic, strong) UILabel *commentLabel;
@@ -25,6 +25,7 @@
 @property (nonatomic, strong) UITapGestureRecognizer *twoFingerTap;
 @property (nonatomic, strong) BLCLikeButton *likeButton;
 @property (nonatomic, strong) UILabel *likeCounter;
+@property (nonatomic, strong) BLCComposeCommentView *commentView;
 
 
 @end
@@ -100,9 +101,12 @@ static NSParagraphStyle *paragraphStyle;
         self.likeButton.backgroundColor = usernameLabelGray;
         self.likeCounter = [[UILabel alloc] init];
         self.likeCounter.backgroundColor = usernameLabelGray;
+        // For CommentView Exercise
+        self.commentView = [[BLCComposeCommentView alloc] init];
+        self.commentView.delegate = self;
         
         
-        for (UIView *view in @[self.mediaImageView, self.usernameAndCaptionLabel, self.commentLabel, self.likeButton, self.likeCounter]) {
+        for (UIView *view in @[self.mediaImageView, self.usernameAndCaptionLabel, self.commentLabel, self.likeButton, self.likeCounter, self.commentView]) {
         
        
             view.multipleTouchEnabled = YES;
@@ -111,14 +115,19 @@ static NSParagraphStyle *paragraphStyle;
             view.translatesAutoresizingMaskIntoConstraints = NO;
         }
         
-        NSDictionary *viewDictionary = NSDictionaryOfVariableBindings(_mediaImageView, _usernameAndCaptionLabel, _commentLabel, _likeButton, _likeCounter);
+       
+        
+        NSDictionary *viewDictionary = NSDictionaryOfVariableBindings(_mediaImageView, _usernameAndCaptionLabel, _commentLabel, _likeButton, _likeCounter, _commentView);
         
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_mediaImageView]|" options:kNilOptions metrics:nil views:viewDictionary]];
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_usernameAndCaptionLabel][_likeCounter(==38)][_likeButton(==38)]|" options:NSLayoutFormatAlignAllTop | NSLayoutFormatAlignAllBottom metrics:nil views:viewDictionary]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_usernameAndCaptionLabel][_likeCounter(==45)][_likeButton(==38)]|" options:NSLayoutFormatAlignAllTop | NSLayoutFormatAlignAllBottom metrics:nil views:viewDictionary]];
 
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_commentLabel]|" options:kNilOptions metrics:nil views:viewDictionary]];
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_mediaImageView][_usernameAndCaptionLabel][_commentLabel]"
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_commentView]|" options:kNilOptions metrics:nil views:viewDictionary]];
+
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_mediaImageView][_usernameAndCaptionLabel][_commentLabel][_commentView(==100)]"
                                                                                  options:kNilOptions
                                                                                  metrics:nil
                                                                                    views:viewDictionary]];
@@ -246,7 +255,7 @@ static NSParagraphStyle *paragraphStyle;
     [layoutCell setNeedsLayout];
     [layoutCell layoutIfNeeded];
                             
-    return CGRectGetMaxY(layoutCell.commentLabel.frame);
+    return CGRectGetMaxY(layoutCell.commentView.frame);
 }
 
 - (void) setMediaItem:(BLCMedia *)mediaItem {
@@ -256,6 +265,7 @@ static NSParagraphStyle *paragraphStyle;
     self.commentLabel.attributedText = [self commentString];
     self.likeButton.likeButtonState = mediaItem.likeState;
     self.likeCounter.attributedText = [self likeCounterString];
+    self.commentView.text = mediaItem.temporaryComment;
     
     }
 
@@ -303,5 +313,22 @@ static NSParagraphStyle *paragraphStyle;
     return self.isEditing == NO;
 }
 
+#pragma mark - BLCComposeCommentViewDelegate
+
+- (void) commentViewDidPressCommentButton:(BLCComposeCommentView *)sender {
+    [self.delegate cell:self didComposeComment:self.mediaItem.temporaryComment];
+}
+
+- (void) commentView:(BLCComposeCommentView *)sender textDidChange:(NSString *)text {
+    self.mediaItem.temporaryComment = text;
+}
+
+- (void) commentViewWillStartEditing:(BLCComposeCommentView *)sender {
+    [self.delegate cellWillStartComposingComment:self];
+}
+
+- (void) stopComposingComment {
+    [self.commentView stopComposingComment];
+}
 
 @end
