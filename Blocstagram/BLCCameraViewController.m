@@ -9,9 +9,12 @@
 #import "BLCCameraViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "BLCCameraToolbar.h"
+#import "UIImage+BLCImageUtilities.h"
+#import "BLCCropBox.h"
+#import "BLCImageLibraryViewController.h"
 
 
-@interface BLCCameraViewController () <BLCCameraToolbarDelegate, UIAlertViewDelegate>
+@interface BLCCameraViewController () <BLCCameraToolbarDelegate, UIAlertViewDelegate, BLCImageLibraryViewControllerDelegate>
 
 @property (nonatomic, strong) UIView *imagePreview;
 
@@ -19,11 +22,11 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
 @property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
 
-@property (nonatomic, strong) NSArray *horizontalLines;
-@property (nonatomic, strong) NSArray *verticalLines;
+//@property (nonatomic, strong) NSArray *horizontalLines;
+//@property (nonatomic, strong) NSArray *verticalLines;
 @property (nonatomic, strong) UIToolbar *topView;
 @property (nonatomic, strong) UIToolbar *bottomView;
-
+@property (nonatomic,strong) BLCCropBox *cropBox;
 @property (nonatomic, strong) BLCCameraToolbar *cameraToolbar;
 
 @end
@@ -95,9 +98,7 @@
 
 
 - (void) addViewsToViewHierarchy {
-    NSMutableArray *views = [@[self.imagePreview, self.topView, self.bottomView] mutableCopy];
-    [views addObjectsFromArray:self.horizontalLines];
-    [views addObjectsFromArray:self.verticalLines];
+    NSMutableArray *views = [@[self.imagePreview, self.cropBox, self.topView, self.bottomView] mutableCopy];
     [views addObject:self.cameraToolbar];
     
     for (UIView *view in views) {
@@ -110,6 +111,7 @@
     self.imagePreview = [UIView new];
     self.topView = [UIToolbar new];
     self.bottomView = [UIToolbar new];
+    self.cropBox = [BLCCropBox new];
     self.cameraToolbar = [[BLCCameraToolbar alloc] initWithImageNames:@[@"rotate", @"road"]];
     self.cameraToolbar.delegate = self;
     UIColor *whiteBG = [UIColor colorWithWhite:1.0 alpha:.15];
@@ -118,34 +120,6 @@
     self.topView.alpha = 0.5;
     self.bottomView.alpha = 0.5;
 }
-- (NSArray *) horizontalLines {
-    if (!_horizontalLines) {
-        _horizontalLines = [self newArrayOfFourWhiteViews];
-    }
-    
-    return _horizontalLines;
-}
-
-- (NSArray *) verticalLines {
-    if (!_verticalLines) {
-        _verticalLines = [self newArrayOfFourWhiteViews];
-    }
-    
-    return _verticalLines;
-}
-
-- (NSArray *) newArrayOfFourWhiteViews {
-    NSMutableArray *array = [NSMutableArray array];
-    
-    for (int i = 0; i < 4; i++) {
-        UIView *view = [UIView new];
-        view.backgroundColor = [UIColor whiteColor];
-        [array addObject:view];
-    }
-    
-    return array;
-}
-
 
 #pragma mark - UIAlertViewDelegate
 
@@ -166,22 +140,7 @@
     CGFloat heightOfBottomView = CGRectGetHeight(self.view.frame) - yOriginOfBottomView;
     self.bottomView.frame = CGRectMake(0, yOriginOfBottomView, width, heightOfBottomView);
     
-    CGFloat thirdOfWidth = width / 3;
-    
-    for (int i = 0; i < 4; i++) {
-        UIView *horizontalLine = self.horizontalLines[i];
-        UIView *verticalLine = self.verticalLines[i];
-        
-        horizontalLine.frame = CGRectMake(0, (i * thirdOfWidth) + CGRectGetMaxY(self.topView.frame), width, 0.5);
-        
-        CGRect verticalFrame = CGRectMake(i * thirdOfWidth, CGRectGetMaxY(self.topView.frame), 0.5, width);
-        
-        if (i == 3) {
-            verticalFrame.origin.x -= 0.5;
-        }
-        
-        verticalLine.frame = verticalFrame;
-    }
+    self.cropBox.frame = CGRectMake(0, CGRectGetMaxY(self.topView.frame), width, width);
     
     self.imagePreview.frame = self.view.bounds;
     self.captureVideoPreviewLayer.frame = self.imagePreview.bounds;
@@ -228,8 +187,19 @@
 }
 
 - (void) rightButtonPressedOnToolbar:(BLCCameraToolbar *)toolbar {
-    NSLog(@"Photo library button pressed.");
+   
+    BLCImageLibraryViewController *imageLibraryVC = [[BLCImageLibraryViewController alloc] init];
+    imageLibraryVC.delegate = self;
+    [self.navigationController pushViewController:imageLibraryVC animated:YES];
+
 }
+#pragma mark - BLCImageLibraryViewControllerDelegate
+
+- (void) imageLibraryViewController:(BLCImageLibraryViewController *)imageLibraryViewController didCompleteWithImage:(UIImage *)image {
+    [self.delegate cameraViewController:self didCompleteWithImage:image];
+}
+
+
 
 // Adding this for the Camera Button Press
 
@@ -255,15 +225,7 @@
             //image = [image imageResizedToMatchAspectRatioOfSize:self.captureVideoPreviewLayer.bounds.size];
             // pass this to the new function, and then return image at the end
           
-            UIView *leftLine = self.verticalLines.firstObject;
-            UIView *rightLine = self.verticalLines.lastObject;
-            UIView *topLine = self.horizontalLines.firstObject;
-            UIView *bottomLine = self.horizontalLines.lastObject;
-            
-            CGRect gridRect = CGRectMake(CGRectGetMinX(leftLine.frame),
-                                         CGRectGetMinY(topLine.frame),
-                                         CGRectGetMaxX(rightLine.frame) - CGRectGetMinX(leftLine.frame),
-                                         CGRectGetMinY(bottomLine.frame) - CGRectGetMinY(topLine.frame));
+            CGRect gridRect = self.cropBox.frame;
             
             CGRect cropRect = gridRect;
             cropRect.origin.x = (CGRectGetMinX(gridRect) + (image.size.width - CGRectGetWidth(gridRect)) / 2);

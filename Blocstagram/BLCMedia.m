@@ -8,9 +8,8 @@
 
 #import "BLCMedia.h"
 #import "BLCUser.h"
-// Added line below for exercise
 #import "BLCComment.h"
-//#import "BLCLikedUsers.h"
+
 
 @implementation BLCMedia
 

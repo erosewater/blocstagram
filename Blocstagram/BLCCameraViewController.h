@@ -8,7 +8,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "UIImage+BLCImageUtilities.h"
+//#import "UIImage+BLCImageUtilities.h"
 
 @class BLCCameraViewController;
 
