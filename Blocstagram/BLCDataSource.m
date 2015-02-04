@@ -29,10 +29,15 @@
 @property (nonatomic, assign) BOOL thereAreNoMoreOlderMessages;
 @property (readonly) long likeValue;
 
+
+
 @property (nonatomic, strong) AFHTTPRequestOperationManager *instagramOperationManager;
 @end
 
 @implementation BLCDataSource
+
+NSString *const BLCImageFinishedNotification = @"BLCImageFinishedNotification";
+
 
 + (instancetype) sharedInstance {
     static dispatch_once_t once;
@@ -413,6 +418,12 @@
 - (void) deleteMediaItem:(BLCMedia *)item {
     NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
     [mutableArrayWithKVO removeObject:item];
+}
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+// Added this, however, I can't find it anywhere
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
+    [[NSNotificationCenter defaultCenter] postNotificationName:BLCImageFinishedNotification object:self];
 }
 
 @end

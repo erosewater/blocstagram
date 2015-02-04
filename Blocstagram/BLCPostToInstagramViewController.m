@@ -7,6 +7,7 @@
 //
 
 #import "BLCPostToInstagramViewController.h"
+#import "BLCDataSource.h"
 
 @interface BLCPostToInstagramViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIAlertViewDelegate, UIDocumentInteractionControllerDelegate>
 
@@ -21,6 +22,10 @@
 
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIBarButtonItem *sendBarButton;
+
+@property (nonatomic, strong) UIDocumentInteractionController *documentController;
+
+
 
 @end
 
@@ -56,7 +61,7 @@
         [self.sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         self.sendBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Send", @"Send button") style:UIBarButtonItemStyleDone target:self action:@selector(sendButtonPressed:)];
-        [self addFiltersToQueue];
+       [self addFiltersToQueue];
     
     }
     
@@ -191,7 +196,7 @@
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+       dispatch_async(dispatch_get_main_queue(), ^{
             NSUInteger newIndex = self.filterImages.count;
             
             [self.filterImages addObject:image];
@@ -199,6 +204,7 @@
             
             [self.filterCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:newIndex inSection:0]]];
         });
+        
     }
 }
 
@@ -367,10 +373,10 @@
                  result = discBlur.outputImage;
              }
              
-             [self addCIImageToCollectionView:result withFilterTitle:NSLocalizedString(@"PosterBlur", @"Poster Filter")];
+            [self addCIImageToCollectionView:result withFilterTitle:NSLocalizedString(@"PosterBlur", @"Poster Filter")];
          }
      }];
-      
+    
          
 }
 
@@ -406,28 +412,34 @@
             return;
         }
         
-        UIDocumentInteractionController *documentController = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
-        documentController.UTI = @"com.instagram.exclusivegram";
+        self.documentController = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
+        self.documentController.UTI = @"com.instagram.exclusivegram";
         
-        documentController.delegate = self;
+        self.documentController.delegate = self;
+
         
         NSString *caption = [alertView textFieldAtIndex:0].text;
         
         if (caption.length > 0) {
-            documentController.annotation = @{@"InstagramCaption": caption};
+            self.documentController.annotation = @{@"InstagramCaption": caption};
         }
         
         if (self.sendButton.superview) {
-            [documentController presentOpenInMenuFromRect:self.sendButton.bounds inView:self.sendButton animated:YES];
+            [self.documentController presentOpenInMenuFromRect:self.sendButton.bounds inView:self.sendButton animated:YES];
         } else {
-            [documentController presentOpenInMenuFromBarButtonItem:self.sendBarButton animated:YES];
+            [self.documentController presentOpenInMenuFromBarButtonItem:self.sendBarButton animated:YES];
         }
     }
+    
+    
 }
+
 #pragma mark - UIDocumentInteractionControllerDelegate
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:BLCImageFinishedNotification object:self];
+  //  [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 @end

@@ -30,6 +30,9 @@
 @property(nonatomic, readonly, getter=isDragging) BOOL dragging;
 @property (nonatomic, weak) UIView *lastSelectedCommentView;
 @property (nonatomic, assign) CGFloat lastKeyboardAdjustment;
+@property (nonatomic, strong) UIPopoverController *cameraPopover;
+@property (nonatomic, strong) UIPopoverController *sharePopover;
+
 
 @end
 
@@ -76,6 +79,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(imageDidFinish:)
+                                                 name:BLCImageFinishedNotification
                                                object:nil];
 }
 
@@ -276,9 +285,16 @@
     self.lastTappedImageView = imageView;
     BLCMediaFullScreenViewController *fullScreenVC = [[BLCMediaFullScreenViewController alloc] initWithMedia:cell.mediaItem];
     
-    fullScreenVC.fullScreenDelegate = self;
-    fullScreenVC.transitioningDelegate = self;
-    fullScreenVC.modalPresentationStyle = UIModalPresentationCustom;
+  
+    
+    if (isPhone) {
+        fullScreenVC.fullScreenDelegate = self;
+        fullScreenVC.transitioningDelegate = self;
+        fullScreenVC.modalPresentationStyle = UIModalPresentationCustom;
+    } else {
+        //fullScreenVC.fullScreenDelegate = self;
+        fullScreenVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
     
     
     [self presentViewController:fullScreenVC animated:YES completion:nil];
@@ -302,7 +318,28 @@
 
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation andCell:(BLCMediaTableViewCell *)cell andImageView:(UIImageView *)imageView {
+
+    [self.sharePopover presentPopoverFromRect:cell.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+//-(void) willAnimateRotationToInterfaceOrientation: (UIInterfaceOrientation) interfaceOrientation duration: (NSTimeInterval) duration {
+//    [self updateLayoutForNewOrientation: interfaceOrientation];
+//}
+//
+//- (void) updateLayoutForNewOrientation: (UIInterfaceOrientation) orientation {
+//    if  {
+//        
+//    } else {
+//        // Do some other stuff
+//    }
+//}
+
+
 - (void) cell:(BLCMediaTableViewCell *)cell didLongPressImageView:(UIImageView *)imageView {
+    
+    
+    
+    
     NSMutableArray *itemsToShare = [NSMutableArray array];
     
     if (cell.mediaItem.caption.length > 0) {
@@ -315,8 +352,17 @@
     
     if (itemsToShare.count > 0) {
         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
-        [self presentViewController:activityVC animated:YES completion:nil];
+        if (isPhone) {
+            [self presentViewController:activityVC animated:YES completion:nil];
+        } else {
+            self.sharePopover = [[UIPopoverController alloc] initWithContentViewController:activityVC];
+         //   self.sharePopover.popoverContentSize = CGSizeMake(320, 568);
+            [self.sharePopover setPopoverContentSize:self.view.frame.size animated:YES];
+            [self.sharePopover presentPopoverFromRect:cell.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+           
+         
     }
+}
 }
 
 #pragma mark - BLCMediaFullScreenDelegate
@@ -344,6 +390,7 @@
     }
 }
 
+//-(void)didShareMedia(BLCMedia *)item fromController:(UIViewC)
 #pragma mark - Camera, BLCCameraViewControllerDelegate, and BLCImageLibraryViewControllerDelegate
 
 - (void) cameraPressed:(UIBarButtonItem *) sender {
@@ -363,7 +410,14 @@
     
     if (imageVC) {
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:imageVC];
-    [self presentViewController:nav animated:YES completion:nil];
+   //modify
+        if (isPhone) {
+            [self presentViewController:nav animated:YES completion:nil];
+        } else {
+            self.cameraPopover = [[UIPopoverController alloc] initWithContentViewController:nav];
+            self.cameraPopover.popoverContentSize = CGSizeMake(320, 568);
+            [self.cameraPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        }
     }
     return;
 }
@@ -374,10 +428,25 @@
         
         [nav pushViewController:postVC animated:YES];
     } else {
-        [nav dismissViewControllerAnimated:YES completion:nil];
+        if (isPhone) {
+            [nav dismissViewControllerAnimated:YES completion:nil];
+        } else {
+           [self.cameraPopover dismissPopoverAnimated:YES];
+           self.cameraPopover = nil;
+        }
     }
 }
 
+#pragma mark - Popover Handling
+
+- (void) imageDidFinish:(NSNotification *)notification {
+    if (isPhone) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self.cameraPopover dismissPopoverAnimated:YES];
+        self.cameraPopover = nil;
+    }
+}
 
 - (void) cameraViewController:(BLCCameraViewController *)cameraViewController didCompleteWithImage:(UIImage *)image {
     [self handleImage:image withNavigationController: cameraViewController.navigationController];
