@@ -97,7 +97,7 @@
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    
+    [super viewWillDisappear:YES];
     
 }
 
@@ -288,7 +288,8 @@
     BLCMediaFullScreenViewController *fullScreenVC = [[BLCMediaFullScreenViewController alloc] initWithMedia:cell.mediaItem];
     
   
-    
+    //  +Need to change this code to allow Modal Display for iPad to include Share Button
+    // In this pull request I can review the best way to do this
     if (isPhone) {
         fullScreenVC.fullScreenDelegate = self;
         fullScreenVC.transitioningDelegate = self;
