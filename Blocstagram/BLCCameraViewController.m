@@ -22,8 +22,6 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
 @property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
 
-//@property (nonatomic, strong) NSArray *horizontalLines;
-//@property (nonatomic, strong) NSArray *verticalLines;
 @property (nonatomic, strong) UIToolbar *topView;
 @property (nonatomic, strong) UIToolbar *bottomView;
 @property (nonatomic,strong) BLCCropBox *cropBox;
