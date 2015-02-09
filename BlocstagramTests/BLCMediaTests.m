@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "BLCMedia.h"
 
 @interface BLCMediaTests : XCTestCase
 
@@ -18,6 +19,7 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    
 }
 
 - (void)tearDown {
@@ -25,10 +27,29 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+- (void)testThatMediaInitializationWorks
+{
+   
+    NSDictionary *captionDictionary = @{@"text":@"Jenny"};
+    NSDictionary *imageURLDictionary =@{@"url": @"http://www.expedia.com"};
+    NSDictionary *resolutionDictionary = @{@"standard_resolution": imageURLDictionary};
+    
+    
+    NSDictionary *sourceDictionary = @{@"id": @"8675309",
+                                       @"caption": captionDictionary,
+                                       @"images": resolutionDictionary};
+    
+    
+    
+    BLCMedia *testMedia = [[BLCMedia alloc] initWithDictionary:sourceDictionary];
+    
+    XCTAssertEqualObjects(testMedia.idNumber, sourceDictionary[@"id"], @"The ID number should be equal");
+    XCTAssertEqualObjects(testMedia.caption, sourceDictionary[@"caption"][@"text"], @"The caption should be equal");
+    XCTAssertEqualObjects(testMedia.mediaURL, [NSURL URLWithString:sourceDictionary[@"images"][@"standard_resolution"][@"url"]], @"The URL should be equal");
+    
 }
+
+
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
